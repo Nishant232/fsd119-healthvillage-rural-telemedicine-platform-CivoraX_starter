@@ -5,7 +5,8 @@ const authMiddleware = require("../middlewares/auth.middleware");
 const roleMiddleware = require("../middlewares/role.middleware");
 const adminController = require("../controllers/admin.controller");
 
-// Admin only routes
+// 🔐 All routes below require ADMIN
+
 router.get(
   "/users",
   authMiddleware,
@@ -25,6 +26,13 @@ router.get(
   authMiddleware,
   roleMiddleware("admin"),
   adminController.getSystemReport
+);
+
+router.get(
+  "/stats",
+  authMiddleware,
+  roleMiddleware("admin"),
+  adminController.getStats
 );
 
 module.exports = router;

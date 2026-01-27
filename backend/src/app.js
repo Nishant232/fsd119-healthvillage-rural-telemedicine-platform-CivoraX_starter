@@ -2,6 +2,7 @@ const appointmentRoutes = require("./routes/appointment.routes");
 const ehrRoutes = require("./routes/ehr.routes");
 const prescriptionRoutes = require("./routes/prescription.routes");
 const adminRoutes = require("./routes/admin.routes");
+const teleconsultationRoutes = require("./routes/teleconsultation.routes");
 
 
 const express = require("express");
@@ -30,8 +31,17 @@ app.use("/api/ehr", ehrRoutes);
 // prescriptions
 app.use("/api/prescriptions", prescriptionRoutes);
 
-// dminRoutes
+// adminRoutes
 app.use("/api/admin", adminRoutes);
+
+// Availability
+app.use("/api/availability", require("./routes/availability.routes"));
+
+//  Teliconsuntant
+app.use("/api/teleconsultation", teleconsultationRoutes);
+
+// Admin Routes
+app.use("/api/admin", require("./routes/admin.routes"));
 
 // Health check
 app.get("/", (req, res) => {

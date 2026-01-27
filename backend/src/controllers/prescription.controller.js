@@ -13,11 +13,13 @@ exports.createPrescription = async (req, res) => {
 
     const prescription = await Prescription.create({
       appointment: appointmentId,
-      doctor: req.user.id,
       patient: patientId,
-      medicines,
-      instructions
-    });
+      doctor: req.user.id,
+      medicines: encrypt(medicines),
+      instructions: encrypt(instructions),
+      followUpDate
+       });
+
 
     res.status(201).json({
       message: "Prescription created successfully",
@@ -38,7 +40,22 @@ exports.getPatientPrescriptions = async (req, res) => {
       .populate("appointment", "appointmentDate");
 
     res.json({ prescriptions });
-  } catch (error) {
+
+    prescription.medicines = decrypt(prescription.medicines);
+    prescription.instructions = decrypt(prescription.instructions);
+  } 
+  catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
+
+// Mark Prescription as Viewed
+exports.markViewed = async (req, res) => {
+  const prescription = await Prescription.findById(req.params.id);
+
+  prescription.status = "viewed";
+  await prescription.save();
+
+  res.json({ message: "Prescription viewed" });
+};
+
