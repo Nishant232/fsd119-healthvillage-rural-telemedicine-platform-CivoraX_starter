@@ -5,34 +5,34 @@ const authMiddleware = require("../middlewares/auth.middleware");
 const roleMiddleware = require("../middlewares/role.middleware");
 const adminController = require("../controllers/admin.controller");
 
-// 🔐 All routes below require ADMIN
+// 🔐 ADMIN ONLY ROUTES
 
+router.get("/users", authMiddleware, roleMiddleware("admin"), adminController.getAllUsers);
+router.get("/appointments", authMiddleware, roleMiddleware("admin"), adminController.getAllAppointments);
+router.get("/report", authMiddleware, roleMiddleware("admin"), adminController.getSystemReport);
+router.get("/stats", authMiddleware, roleMiddleware("admin"), adminController.getStats);
+
+// 🧾 Audit logs
 router.get(
-  "/users",
+  "/audit-logs",
   authMiddleware,
   roleMiddleware("admin"),
-  adminController.getAllUsers
+  adminController.getAuditLogs
 );
 
-router.get(
-  "/appointments",
+// 🔁 User actions
+router.patch(
+  "/users/:id/toggle",
   authMiddleware,
   roleMiddleware("admin"),
-  adminController.getAllAppointments
+  adminController.toggleUserStatus
 );
 
-router.get(
-  "/report",
+router.delete(
+  "/users/:id",
   authMiddleware,
   roleMiddleware("admin"),
-  adminController.getSystemReport
-);
-
-router.get(
-  "/stats",
-  authMiddleware,
-  roleMiddleware("admin"),
-  adminController.getStats
+  adminController.deleteUser
 );
 
 module.exports = router;
